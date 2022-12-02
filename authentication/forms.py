@@ -2,6 +2,66 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import password_validation
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UsernameField
+from phonenumber_field.formfields import PhoneNumberField
+from .models import *
+
+
+class PhoneForm(forms.Form):
+    number = PhoneNumberField()
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class StudentRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            "birthday",
+            "occupation",
+            "phone",
+            "security_question",
+            "security_answer",
+        ]
+
+
+class UserRegistrationForm(UserCreationForm):
+    occupation = forms.CharField(
+        label="Occupation", max_length=100, required=False)
+    birthday = forms.DateTimeField(label="BirthDate", widget=DateInput)
+    phone = PhoneForm()
+    security_question = forms.CharField(
+        label="Security Question", max_length=100, required=False)
+    security_answer = forms.CharField(
+        label="Security Answer", max_length=100, required=False)
+
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email")
+        field_classes = {"username": UsernameField}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self._meta.model.USERNAME_FIELD in self.fields:
+            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs['autofocus'] = True
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+
+            user.save()
+            user_student = Student(occupation=self.cleaned_data['occupation'],
+                                   security_question=self.cleaned_data["security_question"], security_answer=self.cleaned_data['security_answer'], birthday=self.cleaned_data['birthday'], user=user)
+            user_student.save()
+
+        return user
 
 
 class SetPasswordForm(forms.Form):

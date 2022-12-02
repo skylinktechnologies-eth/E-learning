@@ -26,6 +26,26 @@ def homePage(request):
     return render(request, 'main/homepage.html', context)
 
 
+def about(request):
+    context = {}
+    return render(request, 'main/about.html', context)
+
+
+def trainer(request):
+    context = {}
+    return render(request, 'main/trainers.html', context)
+
+
+def events(request):
+    context = {}
+    return render(request, 'main/events.html', context)
+
+
+def contact(request):
+    context = {}
+    return render(request, 'main/contact.html', context)
+
+
 class CourseCreateView(CreateView):
     model = Course
     form_class = RegisterCourseForm
@@ -79,22 +99,5 @@ class CourseListViewAdmin(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Courses"
         context["open"] = "course"
-
-        return {**context}
-
-
-class UserCreateView(CreateView):
-    model = User
-    template_name = "admin-side/register.html"
-    form_class = UserRegistrationForm
-
-    success_url = reverse_lazy("dashboard")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "User"
-        context["open"] = "user"
-        context["card_header"] = "Register User"
-        context['obj_model'] = "user"
 
         return {**context}

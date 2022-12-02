@@ -6,8 +6,13 @@ from django.contrib.auth import logout as logout_
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from .models import Student
-from .forms import PasswordChangeForm
-from views import permissions
+from .forms import *
+
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
+
+
+def permissions(request):
+    context = {}
 
 
 # redirectng the user to login page after logout
@@ -20,7 +25,7 @@ def forgot_password(request):
     try:
         value = request.session['username']
     except:
-        return render(request, 'authentication/forgot-password.html', {'errors': [f"No User found"]})
+        return render(request, 'admin-side/forgot-password.html', {'errors': [f"No User found"]})
     try:
         user = User.objects.get(username=value)
     except:
@@ -34,7 +39,7 @@ def forgot_password(request):
                 request.session['security_answer'] = security_answer
                 return redirect('change-password')
             else:
-                return render(request, 'authentication/forgot-password2.html', {"security_question": security_question.security_question, 'errors': ["Incorrect Answer"], "title": "Forgot Password"})
+                return render(request, 'admin-side/forgot-password2.html', {"security_question": security_question.security_question, 'errors': ["Incorrect Answer"], "title": "Forgot Password"})
         else:
             messages.error(
                 request, "The user doesn't have a security question.")
@@ -45,7 +50,7 @@ def forgot_password(request):
         if Student.objects.filter(user=user):
             security_question = Student.objects.get(user=user)
 
-            return render(request, 'authentication/forgot-password2.html', {"security_question": security_question.security_question, "title": "Forgot Password"})
+            return render(request, 'admin-side/forgot-password2.html', {"security_question": security_question.security_question, "title": "Forgot Password"})
 
         messages.error(request, "The user doesn't have a security quesion.")
 
@@ -69,13 +74,13 @@ def forgot(request):
 
         return redirect('forgot-password')
 
-    return render(request, 'authentication/forgot-password.html', context)
+    return render(request, 'admin-side/forgot-password.html', context)
 
 
 class PasswordChangeView(FormView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('login')
-    template_name = 'authentication/forgot-password3.html'
+    template_name = 'admin-side/forgot-password3.html'
     title = _('Password change')
 
     def get_form_kwargs(self):
@@ -129,3 +134,49 @@ def bad_request_view(request, exception):
         **permissions(request)
     }
     return render(request, "400.html")
+
+
+class StudentupdateView(UpdateView):
+    model = Student
+    template_name = "admin-side/register.html"
+    form_class = StudentRegistrationForm
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["objects"] = self.get_object(self).user
+        return {**context, **permissions(self.request)}
+
+    def get_object(self, queryset=None):
+
+        queryset = User.objects.all()
+
+        pk = self.kwargs.get(self.pk_url_kwarg)
+
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+
+        if pk is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with either an object "
+                "pk or a slug in the URLconf." % self.__class__.__name__
+            )
+
+        obj = queryset.get().Student
+        return obj
+
+
+class UserCreateView(CreateView):
+    model = User
+    template_name = "main/register.html"
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "User"
+        context["open"] = "user"
+        context["card_header"] = "Register User"
+        context['obj_model'] = "user"
+
+        return {**context}
