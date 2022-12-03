@@ -1,0 +1,82 @@
+
+{% extends 'admin-side/index.html' %}
+
+{% block main_page %}
+
+<div class="content h-100 p-4 ">
+  <div class="container-fluid">
+    <div class="card bg-secondary rounded ">
+      <div class="card-header bg-dark text-white">
+      {{card_header}}
+      </div>
+        
+        <div class="card-body">
+
+          <form class="form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}            
+                <div class="text-danger">{{form.errors}}</div>
+                <div class="form-group w-75 ml-auto mr-auto">
+                    Course
+                    {{ form.course }}
+                </div>
+                
+                <div class="form-group w-75 ml-auto mr-auto">
+                  Chapter No
+                    {{ form.chapter_no}}
+                </div>
+
+
+                <div class="form-group w-75 ml-auto mr-auto">
+                    Description
+                    {{ form.description }}
+                </div>
+                
+                                             
+                
+                <div class="form-group w-75 ml-auto mr-auto">
+                    Upload Video
+                    {{ form.video }}
+                </div>
+                <div class="form-group w-75 ml-auto mr-auto">
+                    Upload PDF
+                    {{ form.pdf }}
+                </div>
+                <div class="form-group w-75 ml-auto mr-auto">
+                  Features
+                  <div class='form-check'><input class="form-check-input" type="checkbox" value={{ form.feature }} 
+            
+                  </div>
+                 
+              </div>
+
+                
+                <div class="card-footer w-75 mr-auto ml-auto">
+                  <button class="btn btn-danger float-right " onclick="javascript:history.go(-1);">Cancel</button>
+                    <input type="submit" class="btn btn-primary float-right ml-5" value="Done">
+                </form>
+                
+                </div>
+        </div>
+            
+    </div>
+</div>
+</div>
+{% if messages %}
+            {% for message in messages %}
+                <script>
+                    $(function(){
+                      var Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                        Toast.fire({
+                            icon:'{{ message.tags }}',
+                            title:"{{ message|safe }}"
+                        })
+                    })
+                </script>
+            {% endfor %}
+        {% endif %}
+{% endblock main_page %}

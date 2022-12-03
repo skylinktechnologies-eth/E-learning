@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>DarkPan - Bootstrap 5 Admin Template</title>
+    <title>{{open}}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="" name="keywords" />
     <meta content="" name="description" />
@@ -98,21 +98,29 @@
               ><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a
             >
             <a
-              href="{% url 'admin-course' %}"
+              href="{% url 'courses' %}"
               class="nav-link nav-link {% if open == 'course' %}active{% endif %}"
               ><i class="fa fa-laptop me-2"></i>Courses</a
             >
 
-            <a href="widget.html" class="nav-item nav-link"
+            <a
+              href="{% url 'lessons'%}"
+              class="nav-item nav-link {% if open == 'lesson' %}active{% endif %}"
               ><i class="fa fa-th me-2"></i>Lessons</a
             >
-            <a href="form.html" class="nav-item nav-link"
-              ><i class="fa fa-keyboard me-2"></i>Students</a
+            <a
+              href="{%url 'categorys'%}"
+              class="nav-item nav-link {% if open == 'category' %}active{% endif %}"
+              ><i class="fa fa-keyboard me-2"></i>Category</a
             >
-            <a href="table.html" class="nav-item nav-link"
+            <a
+              href="table.html"
+              class="nav-item nav-link {% if open == 'course' %}active{% endif %}"
               ><i class="fa fa-table me-2"></i>Payments</a
             >
-            <a href="chart.html" class="nav-item nav-link"
+            <a
+              href="chart.html"
+              class="nav-item nav-link {% if open == 'Attending' %}active{% endif %}"
               ><i class="fa fa-chart-bar me-2"></i>Attendings</a
             >
             <div class="nav-item dropdown">

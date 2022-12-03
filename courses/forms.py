@@ -41,3 +41,29 @@ class UpdateUserForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class RegisterLessonForm(forms.ModelForm):
+    feature = forms.BooleanField()
+
+    def __init__(self, *args, **kwargs) -> None:
+        super(RegisterLessonForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    class Meta:
+        model = Lesson
+        fields = ['course', 'chapter_no', 'description',
+                  'video', 'pdf']
+
+
+class RegisterCategoryForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs) -> None:
+        super(RegisterCategoryForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    class Meta:
+        model = Category
+        fields = ['name', 'image']

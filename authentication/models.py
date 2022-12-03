@@ -3,9 +3,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from phonenumber_field.modelfields import PhoneNumberField
+from django.forms import ValidationError
 
 # Create your models here.
+
+
+def only_int(value):
+    if value.isdigit() == False:
+        raise ValidationError('Phone Number contains characters')
 
 
 class Student(models.Model):
@@ -21,7 +26,8 @@ class Student(models.Model):
     birthday = models.DateField(
         _("Birthdate"), auto_now=False, auto_now_add=False)
     occupation = models.CharField(_("Occupation"), max_length=30)
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(blank=True, null=True,
+                             max_length=15, validators=[only_int])
 
     def __str__(self) -> str:
         return self.user.username

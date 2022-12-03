@@ -8,12 +8,14 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Course(models.Model):
+    Category = models.ForeignKey(
+        "courses.Category", verbose_name=_("Course Category"), on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Name"), max_length=100)
     description = models.TextField(_("Description"))
     duration = models.DurationField(_("Course Duration"))
     amount = models.DecimalField(_("Price"),  decimal_places=2, max_digits=10)
     cover_image = models.ImageField(
-        _("Room Image"), null=True, upload_to="image/", blank=True)
+        _("Cover Image"), null=True, upload_to="image/", blank=True)
     feature = models.BooleanField(_("Courese type"))
 
     def __str__(self):
@@ -31,6 +33,8 @@ class Lesson(models.Model):
         _("Lesson Pdf"), upload_to="file/", null=True, blank=True)
 
     feature = models.BooleanField(_("lesson Type"), default=True)
+    course = models.ForeignKey("courses.Course", verbose_name=_(
+        "Course"), on_delete=models.CASCADE, null=False, blank=False)
 
 
 class Attending(models.Model):
@@ -42,6 +46,6 @@ class Attending(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(_("Course Category"), max_length=30)
+    name = models.CharField(_("Category Name"), max_length=30)
     image = models.ImageField(
         _("Category Image"), upload_to="image/", null=True, blank=True)

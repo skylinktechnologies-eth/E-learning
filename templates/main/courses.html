@@ -20,7 +20,9 @@
         {% if object_list.count > 0 %} {% for data in object_list %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
           <div class="course-item">
+            {% if data.cover_image %}
             <img src="{{ data.cover_image.url }}" class="img-fluid" alt="..." />
+            {%endif%}
             <div class="course-content">
               <div
                 class="d-flex justify-content-between align-items-center mb-3"
@@ -29,19 +31,19 @@
                 <p class="price">{{data.amount}}$</p>
               </div>
 
-              <h3><a href="course-details.html">Website Design</a></h3>
+              <h3>
+                <a href="{% url 'detail-course' data.id %}">Website Design</a>
+              </h3>
               <p>{{data.description}}</p>
               <div
                 class="trainer d-flex justify-content-between align-items-center"
               >
+                {% if data.cover_image %}
                 <div class="trainer-profile d-flex align-items-center">
-                  <img
-                    src="{{ data.cover_image.url }}"
-                    class="img-fluid"
-                    alt=""
-                  />
+                  <img src="" class="img-fluid" alt="" />
                   <span>Antonio</span>
                 </div>
+                {% endif %}
                 <div class="trainer-rank d-flex align-items-center">
                   <i class="bx bx-user"></i>&nbsp;50 &nbsp;&nbsp;
                   <i class="bx bx-heart"></i>&nbsp;65
@@ -53,6 +55,7 @@
         {% endfor %} {% endif %}
         <!-- End Course Item-->
 
+        {% comment %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
           <div class="course-item">
             <img src="assets/img/course-2.jpg" class="img-fluid" alt="..." />
@@ -90,8 +93,10 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
         <!-- End Course Item-->
 
+        {% comment %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
           <div class="course-item">
             <img src="assets/img/course-3.jpg" class="img-fluid" alt="..." />
@@ -127,6 +132,7 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
         <!-- End Course Item-->
       </div>
     </div>
