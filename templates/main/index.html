@@ -68,11 +68,41 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-            <li><a class="active" href="index.html">Home</a></li>
-            <li><a href="{% url 'about'%}">About</a></li>
-            <li><a href="{% url 'courses'%}">Courses</a></li>
-            <li><a href="{%url 'trainer'%}">Trainers</a></li>
-            <li><a href="{%url 'event'%}">Events</a></li>
+            <li>
+              <a
+                class="{% if open == 'home' %}active{% endif %}"
+                href="{%url 'home'%}"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'about'%}"
+                class="{% if open == 'about' %}active{% endif %}"
+                >About</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'courses'%}"
+                class="{% if open == 'course' %}active{% endif %}"
+                >Courses</a
+              >
+            </li>
+            <li>
+              <a
+                href="{%url 'trainer'%}"
+                class="{% if open == 'trainer' %}active{% endif %}"
+                >Trainers</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'event'%}"
+                class="{% if open == 'event' %}active{% endif %}"
+                >Events</a
+              >
+            </li>
             {% comment %}
             <li><a href="pricing.html">Pricing</a></li>
             {% endcomment %} {% comment %}
@@ -101,13 +131,19 @@
               </ul>
             </li>
             {% endcomment %}
-            <li><a href="{%url 'contact'%}">Contact</a></li>
+            <li>
+              <a
+                href="{%url 'contact'%}"
+                class="{% if open == 'contact' %}active{% endif %}"
+                >Contact</a
+              >
+            </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
         <!-- .navbar -->
 
-        <a href="courses.html" class="get-started-btn">Get Started</a>
+        <a href="{%url 'register-user' %}" class="get-started-btn">Register</a>
       </div>
     </header>
     {% block main_page %} {% endblock main_page %}

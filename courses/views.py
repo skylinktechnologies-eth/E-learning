@@ -23,27 +23,27 @@ def dashboard(request):
 
 
 def homePage(request):
-    context = {}
+    context = {"open": "home"}
     return render(request, 'main/homepage.html', context)
 
 
 def about(request):
-    context = {}
+    context = {"open": "about"}
     return render(request, 'main/about.html', context)
 
 
 def trainer(request):
-    context = {}
+    context = {"open": "trainer"}
     return render(request, 'main/trainers.html', context)
 
 
 def events(request):
-    context = {}
+    context = {"open": "event"}
     return render(request, 'main/events.html', context)
 
 
 def contact(request):
-    context = {}
+    context = {"open": "contact"}
     return render(request, 'main/contact.html', context)
 
 
@@ -86,6 +86,17 @@ class CourseListView(ListView):
         context["open"] = "course"
 
         return {**context}
+
+
+def CourseDetail(request, pk):
+    course = Course.objects.get(id=pk)
+    user = request.user
+    lesson = Lesson.objects.get()
+    if request.method == "POST":
+        attending = Attending(
+            course=course, student=user.student, date=timezone.now())
+        attending.full_clean()
+        attending.save()
 
 
 class CourseDetailView(DetailView):

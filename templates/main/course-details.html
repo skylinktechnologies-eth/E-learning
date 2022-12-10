@@ -18,7 +18,9 @@
     <div class="container" data-aos="fade-up">
       <div class="row">
         <div class="col-lg-8">
+          {%if object.cover_image %}
           <img src="{{ object.cover_image.url }}" class="img-fluid" alt="" />
+          {% endif%}
           <h3>{{ object.name }}</h3>
           <p>
             Qui et explicabo voluptatem et ab qui vero et voluptas. Sint

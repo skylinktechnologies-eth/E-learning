@@ -49,3 +49,13 @@ class Category(models.Model):
     name = models.CharField(_("Category Name"), max_length=30)
     image = models.ImageField(
         _("Category Image"), upload_to="image/", null=True, blank=True)
+
+
+class payment(models.Model):
+    payment_date = models.DateTimeField(default=timezone.now),
+    transaction_id = models.CharField(_("Transaction Id"), max_length=100),
+    bank_reference_number = models.CharField(
+        _("Bank Reference Number"), max_length=50),
+    course_order_id = models.ForeignKey(
+        "courses.Course", verbose_name=_("Course"), on_delete=models.CASCADE),
+    payment_status = models.BooleanField(_("Status"), default=False)

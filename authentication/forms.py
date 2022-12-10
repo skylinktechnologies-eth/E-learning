@@ -3,12 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import password_validation
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UsernameField
-from phonenumber_field.formfields import PhoneNumberField
+
 from .models import *
-
-
-class PhoneForm(forms.Form):
-    number = PhoneNumberField()
 
 
 class DateInput(forms.DateInput):
@@ -31,7 +27,7 @@ class UserRegistrationForm(UserCreationForm):
     occupation = forms.CharField(
         label="Occupation", max_length=100, required=False)
     birthday = forms.DateTimeField(label="BirthDate", widget=DateInput)
-    phone = PhoneForm()
+
     security_question = forms.CharField(
         label="Security Question", max_length=100, required=False)
     security_answer = forms.CharField(
@@ -39,7 +35,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "email")
+        fields = ("username", "first_name", "last_name", "email", "phone")
         field_classes = {"username": UsernameField}
 
     def __init__(self, *args, **kwargs):
