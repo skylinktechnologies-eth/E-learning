@@ -35,7 +35,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "email", "phone")
+        fields = ("username", "first_name", "last_name", "email")
         field_classes = {"username": UsernameField}
 
     def __init__(self, *args, **kwargs):

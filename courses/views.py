@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, permission_required
 from .models import *
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from .forms import *
@@ -6,6 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
+
 
 # Create your views here.
 
@@ -88,15 +90,24 @@ class CourseListView(ListView):
         return {**context}
 
 
+@login_required
 def CourseDetail(request, pk):
     course = Course.objects.get(id=pk)
     user = request.user
     lesson = Lesson.objects.get()
+    context = {
+        "title": "Course",
+    }
     if request.method == "POST":
+        for i in range(100):
+            print("amin")
         attending = Attending(
             course=course, student=user.student, date=timezone.now())
         attending.full_clean()
         attending.save()
+        messages.success(request, message="Renter Deleted Sucessfully")
+        return redirect("home")
+    return render(request, 'main/course-details.html', context)
 
 
 class CourseDetailView(DetailView):

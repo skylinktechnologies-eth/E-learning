@@ -61,7 +61,10 @@
             class="course-info d-flex justify-content-center align-items-center"
             style="background-color: #5fcf80; cursor: pointer"
           >
-            <a href="{%url 'home' %}">Apply Now</a>
+            <form method="POST">
+              {% csrf_token %}
+              <button>Apply Now</button>
+            </form>
           </div>
         </div>
       </div>
