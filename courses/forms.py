@@ -57,6 +57,17 @@ class RegisterLessonForm(forms.ModelForm):
                   'video', 'pdf']
 
 
+class RegisterPaymentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs) -> None:
+        super(RegisterPaymentForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+
 class RegisterCategoryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs) -> None:
@@ -69,20 +80,20 @@ class RegisterCategoryForm(forms.ModelForm):
         fields = ['name', 'image']
 
 
-class RegisterAttendingForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs) -> None:
-        super(RegisterAttendingForm, self).__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+# class RegisterAttendingForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs) -> None:
+#         super(RegisterAttendingForm, self).__init__(*args, **kwargs)
+#         for field_name, field in self.fields.items():
+#             field.widget.attrs['class'] = 'form-control'
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data["password1"])
+#         if commit:
+#             user.save()
 
-            user.save()
-            user_student = Attending()
-            user_student.save()
+#             user.save()
+#             user_student = Attending()
+#             user_student.save()
 
-        return user
+#         return user
