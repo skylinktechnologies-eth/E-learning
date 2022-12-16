@@ -25,7 +25,8 @@ def dashboard(request):
 
 
 def homePage(request):
-    context = {"open": "home"}
+    courses = Course.objects.all()
+    context = {"open": "home", "courses": courses}
     return render(request, 'main/homepage.html', context)
 
 
@@ -47,6 +48,41 @@ def events(request):
 def contact(request):
     context = {"open": "contact"}
     return render(request, 'main/contact.html', context)
+
+
+def PaymentCreateView(request):
+    context = {"title": "payment"}
+    form = RegisterPaymentForm
+    if request.method == "POST":
+        user = request.user
+        transaction = request.POST.get("transaction_id")
+        bank_ref = request.POST.get("bank_reference_number")
+        bank_name = request.POST.get("bank_name")
+        course_id = request.POST.get("course_order_id")
+        payment = Payment(transaction_id=transaction,
+                          bank_reference_number=bank_ref, bank_name=bank_name, course_order_id=course_id)
+        attending = Attending(
+            course=course_id, student=user.student)
+        payment.full_clean()
+        attending.full_clean()
+        payment.save()
+        attending.save()
+        messages.success(request, message="Renter Deleted Sucessfully")
+        return redirect("home")
+    return render(request, 'main/register.html', context)
+
+
+# class PaymentCreateView(CreateView):
+#     model = Payment
+#     form_class = RegisterPaymentForm
+#     template_name = "main/register.html"
+#     success_url = reverse_lazy('home')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["tab_name"] = "Register Payment"
+#         context["title"] = "Payment "
+#         return {**context}
 
 
 class CourseCreateView(CreateView):
@@ -99,8 +135,7 @@ def CourseDetail(request, pk):
         "title": "Course",
     }
     if request.method == "POST":
-        for i in range(100):
-            print("amin")
+
         attending = Attending(
             course=course, student=user.student, date=timezone.now())
         attending.full_clean()

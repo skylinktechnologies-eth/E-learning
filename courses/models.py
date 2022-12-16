@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Course(models.Model):
-    Category = models.ForeignKey(
+    category = models.ForeignKey(
         "courses.Category", verbose_name=_("Course Category"), on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Name"), max_length=100)
     description = models.TextField(_("Description"))
@@ -42,6 +42,9 @@ class Category(models.Model):
     image = models.ImageField(
         _("Category Image"), upload_to="image/", null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Attending(models.Model):
     date = models.DateField(default=timezone.now)
@@ -53,12 +56,12 @@ class Attending(models.Model):
 
 
 class Payment(models.Model):
-    payment_date = models.DateTimeField(default=timezone.now),
-    transaction_id = models.CharField(_("Transaction Id"), max_length=100),
+    payment_date = models.DateTimeField(default=timezone.now, )
+    transaction_id = models.CharField(_("Transaction Id"), max_length=100)
     bank_reference_number = models.CharField(
-        _("Bank Reference Number"), max_length=50),
+        _("Bank Reference Number"), max_length=50)
     bank_name = models.CharField(
-        _("Bank Name"), max_length=50),
+        _("Bank Name"), max_length=50)
     course_order_id = models.ForeignKey(
-        "courses.Attending", verbose_name=_("Course"), on_delete=models.CASCADE),
+        "courses.Course", verbose_name=_("Course"), on_delete=models.CASCADE)
     payment_status = models.BooleanField(_("Status"), default=False)

@@ -65,7 +65,8 @@ class RegisterPaymentForm(forms.ModelForm):
 
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = ['course_order_id', 'bank_name',
+                  'transaction_id', 'bank_reference_number', ]
 
 
 class RegisterCategoryForm(forms.ModelForm):

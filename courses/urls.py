@@ -12,7 +12,7 @@ urlpatterns = [
     path('contact/', views.contact, name="contact"),
     path("detail-course/<int:pk>/",
          views.CourseDetail, name="detail-course"),
-    path("dashbaord/", views.dashboard, name='dashboard'),
+    path("dashboard/", views.dashboard, name='dashboard'),
     path("register-Course", views.CourseCreateView.as_view(), name='register-course'),
     path("admin-courses", views.CourseListViewAdmin.as_view(), name='admin-courses'),
     path("register-lesson", views.LessonCreateview.as_view(), name="register-lesson"),
@@ -32,4 +32,6 @@ urlpatterns = [
          views.LessonUpdateView.as_view(), name='update-lesson'),
     path("delete-lesson/<int:pk>/",
          views.LessonDeleteView.as_view(), name="delete-lesson"),
+    path("register-payment",
+         views.PaymentCreateView, name="register-payment"),
 ]

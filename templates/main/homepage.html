@@ -8,7 +8,9 @@
     data-aos-delay="100"
   >
     <h1>Learning Today,<br />Leading Tomorrow</h1>
-    <h2>We are team of talented designers making websites with Bootstrap</h2>
+    <h2>
+      We provide short term certification courses with very experienced Trainers
+    </h2>
     <a href="courses.html" class="btn-get-started">Get Started</a>
   </div>
 </section>
@@ -266,6 +268,7 @@
       </div>
 
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
+        {% for course in courses %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
           <div class="course-item">
             <img src="img/course-1.jpg" class="img-fluid" alt="..." />
@@ -273,15 +276,12 @@
               <div
                 class="d-flex justify-content-between align-items-center mb-3"
               >
-                <h4>Web Development</h4>
-                <p class="price">$169</p>
+                <h4>{{course.category}}</h4>
+                <p class="price">{{course.amount}}Birr</p>
               </div>
 
-              <h3><a href="course-details.html">Website Design</a></h3>
-              <p>
-                Et architecto provident deleniti facere repellat nobis iste. Id
-                facere quia quae dolores dolorem tempore.
-              </p>
+              <h3><a href="course-details.html">{{ course.title }}</a></h3>
+              <p>{{ course.description }}.</p>
               <div
                 class="trainer d-flex justify-content-between align-items-center"
               >
@@ -300,9 +300,11 @@
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
         <!-- End Course Item-->
 
+        {% comment %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
           <div class="course-item">
             <img src="img/course-2.jpg" class="img-fluid" alt="..." />
@@ -340,8 +342,10 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
         <!-- End Course Item-->
 
+        {% comment %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
           <div class="course-item">
             <img src="img/course-3.jpg" class="img-fluid" alt="..." />
@@ -377,6 +381,7 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
         <!-- End Course Item-->
       </div>
     </div>
@@ -458,4 +463,19 @@
   ><i class="bi bi-arrow-up-short"></i
 ></a>
 
-{% endblock main_page %}
+{% endblock main_page %} {% if messages %} {% for message in messages %}
+<script>
+  $(function () {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+    Toast.fire({
+      icon: "{{ message.tags }}",
+      title: "{{ message|safe }}",
+    });
+  });
+</script>
+{% endfor %} {% endif %}

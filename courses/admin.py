@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(Course)
 admin.site.register(Attending)
 admin.site.register(Payment)
+admin.site.register(Category)

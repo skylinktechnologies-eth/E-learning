@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% if title %}{{ title }}{% else %}Login{% endif %}</title>
+    <title>{% if title %}{{ title }}{% else %}E-learning{% endif %}</title>
 
     <!-- Font Awesome -->
     <link
@@ -36,7 +36,7 @@
       <!-- /.login-logo -->
       <div class="card card-outline card-primary" style="margin:-100px">
         <div class="card-header text-center">
-          <a href="{% url 'home' %}" class="h3">Register</a>
+          <a href="{% url 'home' %}" class="h3">Register {{ title }}</a>
         </div>
         <div class="card-body">
 
