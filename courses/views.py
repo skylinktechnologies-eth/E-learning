@@ -51,38 +51,42 @@ def contact(request):
 
 
 def PaymentCreateView(request):
-    context = {"title": "payment"}
-    form = RegisterPaymentForm
     if request.method == "POST":
+        form = RegisterPaymentForm(request.POST)
         user = request.user
-        transaction = request.POST.get("transaction_id")
-        bank_ref = request.POST.get("bank_reference_number")
-        bank_name = request.POST.get("bank_name")
         course_id = request.POST.get("course_order_id")
-        payment = Payment(transaction_id=transaction,
-                          bank_reference_number=bank_ref, bank_name=bank_name, course_order_id=course_id)
-        attending = Attending(
-            course=course_id, student=user.student)
-        payment.full_clean()
-        attending.full_clean()
-        payment.save()
-        attending.save()
-        messages.success(request, message="Renter Deleted Sucessfully")
-        return redirect("home")
+        if form.is_valid():
+            course = Course.objects.get(id=course_id)
+            attending = Attending(
+                course=course, student=user.student)
+            attending.full_clean()
+            form.save()
+            attending.save()
+            messages.success(request, message="payment registerd Sucessfully")
+            return redirect("home")
+    else:
+        form = RegisterPaymentForm()
+    context = {"title": "payment", "form": form}
     return render(request, 'main/register.html', context)
 
 
-# class PaymentCreateView(CreateView):
-#     model = Payment
-#     form_class = RegisterPaymentForm
-#     template_name = "main/register.html"
-#     success_url = reverse_lazy('home')
+class PaymentListView(ListView):
+    model = Payment
+    template_name = "admin-side/payment-list.html"
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["tab_name"] = "Register Payment"
-#         context["title"] = "Payment "
-#         return {**context}
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Payment"
+        context["open"] = "payment"
+
+        return {**context}
+
+
+def PaymentConfirmView(request, pk):
+    if request.method == 'POST':
+        payment = Payment.objects.get(id=pk)
+
+        payment.status = True
 
 
 class CourseCreateView(CreateView):

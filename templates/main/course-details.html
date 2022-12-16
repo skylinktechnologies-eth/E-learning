@@ -61,11 +61,7 @@
             class="course-info d-flex justify-content-center align-items-center"
             style="background-color: #5fcf80; cursor: pointer"
           >
-            <form method="POST">
-              {% csrf_token %}
-              <button>Apply Now</button>
-              <a>Apply Now</a>
-            </form>
+            <a href= {% url 'register-payment'%}>Apply Now</a>
           </div>
         </div>
       </div>

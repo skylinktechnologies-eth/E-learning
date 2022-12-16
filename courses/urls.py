@@ -34,4 +34,6 @@ urlpatterns = [
          views.LessonDeleteView.as_view(), name="delete-lesson"),
     path("register-payment",
          views.PaymentCreateView, name="register-payment"),
+    path("admin-payment",
+         views.PaymentListView.as_view(), name="payments"),
 ]
