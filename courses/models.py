@@ -48,11 +48,9 @@ class Category(models.Model):
 
 class Attending(models.Model):
     date = models.DateField(default=timezone.now)
-    course = models.ForeignKey("courses.Course", verbose_name=_(
-        "Course"), on_delete=models.PROTECT)
-    student = models.ForeignKey(
-        'authentication.Student', verbose_name=_("Student"), on_delete=models.PROTECT)
     status = models.BooleanField(default=False)
+    payment = models.ForeignKey('courses.Payment', verbose_name=_(
+        "Payment"), on_delete=models.PROTECT)
 
 
 class Payment(models.Model):
@@ -62,6 +60,8 @@ class Payment(models.Model):
         _("Bank Reference Number"), max_length=50)
     bank_name = models.CharField(
         _("Bank Name"), max_length=50)
+    student = models.ForeignKey(
+        'authentication.Student', verbose_name=_("Student"), on_delete=models.PROTECT)
     course_order_id = models.ForeignKey(
         "courses.Course", verbose_name=_("Course"), on_delete=models.CASCADE)
-    payment_status = models.BooleanField(_("Status"), default=False)
+    status = models.BooleanField(_("Status"), default=False)

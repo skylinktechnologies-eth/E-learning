@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
-
+from authentication.models import Student
+# from ..authentication.models import Student
 
 # Create your views here.
 
@@ -19,9 +20,22 @@ def permissions(request):
 
 
 def dashboard(request):
+    course = Course.objects.all().count()
+    student = Student.objects.all().count()
 
-    context = {}
-    return render(request, 'admin-side/dashboard.html', {"open": "dashboard"})
+    payment = Payment.objects.all()
+    total = 0
+    unconfirmed = 0
+    for i in payment:
+        if i.payment_status:
+            amount = i.course_order_id.amount
+            total = total + amount
+        else:
+            amount = i.course_order_id.amount
+            unconfirmed = unconfirmed + amount
+    context = {"course": course, "student": student,
+               "open": "dashboard", "total": total, "unpaid": unconfirmed}
+    return render(request, 'admin-side/dashboard.html', context)
 
 
 def homePage(request):
@@ -68,6 +82,10 @@ def PaymentCreateView(request):
         form = RegisterPaymentForm()
     context = {"title": "payment", "form": form}
     return render(request, 'main/register.html', context)
+
+
+def PaymentConfirmView(request):
+    attending = Attending.objects.get()
 
 
 class PaymentListView(ListView):

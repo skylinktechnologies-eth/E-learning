@@ -4,7 +4,7 @@
     <div class="card bg-secondary rounded">
       <div class="card-header bg-dark text-white">
         <h3 class="card-title">
-          List of All {{ title.capitalize }}
+          List of All {{ title.capitalize }} {% comment %}
           <a
             class="btn btn-outline-success"
             href="{% url 'register-lesson' %}"
@@ -12,6 +12,7 @@
           >
             Add New Lesson
           </a>
+          {% endcomment %}
         </h3>
       </div>
 
