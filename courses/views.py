@@ -378,3 +378,15 @@ class LessonDeleteView(DeleteView):
         messages.success(self.request, "Lesson Deleted successfully")
 
         return HttpResponseRedirect(self.success_url)
+
+
+class AttendingListView(ListView):
+    model = Attending
+    template_name = "admin-side/attending-list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Attending"
+        context["open"] = "attending"
+
+        return {**context}
