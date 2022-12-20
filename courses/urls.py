@@ -38,4 +38,5 @@ urlpatterns = [
          views.PaymentListView.as_view(), name="payments"),
     path("admin-attending",
          views.AttendingListView.as_view(), name="attendings"),
+    path("confirm-payment/<int:pk>", views.PaymentConfirmView, name="confirm")
 ]

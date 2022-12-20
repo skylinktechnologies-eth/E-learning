@@ -49,7 +49,7 @@ class Category(models.Model):
 class Attending(models.Model):
     date = models.DateField(default=timezone.now)
     status = models.BooleanField(default=False)
-    payment = models.ForeignKey('courses.Payment', verbose_name=_(
+    payment = models.OneToOneField('courses.Payment', verbose_name=_(
         "Payment"), on_delete=models.PROTECT)
 
 

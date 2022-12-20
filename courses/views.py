@@ -27,7 +27,7 @@ def dashboard(request):
     total = 0
     unconfirmed = 0
     for i in payment:
-        if i.payment_status:
+        if i.status:
             amount = i.course_order_id.amount
             total = total + amount
         else:
@@ -71,10 +71,13 @@ def PaymentCreateView(request):
         course_id = request.POST.get("course_order_id")
         if form.is_valid():
             course = Course.objects.get(id=course_id)
+            payment = form.save(commit=False)
+            payment.student = user.student
+            payment.save()
+
             attending = Attending(
-                course=course, student=user.student)
+                payment=payment)
             attending.full_clean()
-            form.save()
             attending.save()
             messages.success(request, message="payment registerd Sucessfully")
             return redirect("home")
@@ -84,8 +87,12 @@ def PaymentCreateView(request):
     return render(request, 'main/register.html', context)
 
 
-def PaymentConfirmView(request):
-    attending = Attending.objects.get()
+def PaymentConfirmView(request, pk):
+    attending = Attending.objects.get(payment_id=pk)
+    attending.status = True
+    attending.payment.status = True
+
+    return HttpResponseRedirect(reverse_lazy('payments'))
 
 
 class PaymentListView(ListView):
