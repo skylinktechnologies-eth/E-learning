@@ -36,8 +36,8 @@
                 <tr>
                   <td>{{ forloop.counter }}</td>
                   <td>{{ data.date }}</td>
-                  <td>{{ data.course}}</td>
-                  <td>{{ data.student.user}}</td>
+                  <td>{{ data.payment.course_order_id }}</td>
+                  <td>{{ data.payment.student}}</td>
 
                   {% if data.status%}
                   <td class="text-success"><span>&#10003;</span></td>

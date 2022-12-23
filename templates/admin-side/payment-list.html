@@ -41,6 +41,7 @@
                   <td>{{ data.transaction_id}}</td>
 
                   <td class="product-action d-flex">
+                    {%if data.status == False%}
                     <form method="POST">
                       <a
                         class="btn btn-success btn-sm mr-3"
@@ -50,6 +51,15 @@
                         Confirm
                       </a>
                     </form>
+                    {% else %}
+                    <a
+                      class="btn btn-success btn-sm mr-3 disabled"
+                      href="{% url 'confirm' data.id %}"
+                    >
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                      Confirm
+                    </a>
+                    {% endif %} {% comment %}
                     <a
                       class="btn btn-info btn-sm mr-3"
                       href="{% url 'update-lesson' data.id %}"
@@ -57,14 +67,23 @@
                       <i class="fas fa-pencil-alt"> </i>
                       Edit
                     </a>
-
-                    <a
-                      class="btn btn-danger btn-sm mr-3"
-                      href="{% url 'delete-lesson' data.id %}"
-                    >
+                    {% endcomment %}
+                    <form methon="POST">
+                      {% if data.status %}
+                      <a
+                        class="btn btn-danger btn-sm mr-3"
+                        href="{% url 'reject' data.id %}"
+                      >
+                        <i class="fas fa-trash"> </i>
+                        Reject
+                      </a>
+                    </form>
+                    {% else %}
+                    <a class="btn btn-danger btn-sm mr-3 disabled" href="">
                       <i class="fas fa-trash"> </i>
                       Reject
                     </a>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %} {% else %}

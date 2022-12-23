@@ -38,5 +38,6 @@ urlpatterns = [
          views.PaymentListView.as_view(), name="payments"),
     path("admin-attending",
          views.AttendingListView.as_view(), name="attendings"),
-    path("confirm-payment/<int:pk>", views.PaymentConfirmView, name="confirm")
+    path("confirm-payment/<int:pk>", views.PaymentConfirmView, name="confirm"),
+    path("reject-payment/<int:pk>", views.paymentRejectView, name="reject"),
 ]

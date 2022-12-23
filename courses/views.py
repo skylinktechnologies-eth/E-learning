@@ -89,9 +89,37 @@ def PaymentCreateView(request):
 
 def PaymentConfirmView(request, pk):
     attending = Attending.objects.get(payment_id=pk)
+    payment = Payment.objects.get(id=pk)
+    payment.status = True
     attending.status = True
-    attending.payment.status = True
+    attending.save()
+    payment.save()
+    messages.success(request, 'Payment Conrimed Succesfully')
+    return HttpResponseRedirect(reverse_lazy('payments'))
 
+
+# class paymentUpdateView(UpdateView):
+#     model = Payment
+#     template_name = "admin-side/register.html"
+#     success_url = reverse_lazy('payments')
+#     form_class = RegisterPaymentForm
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = "Payment"
+#         context["open"] = "payment"
+
+#         return {**context}
+
+
+def paymentRejectView(request, pk):
+    attending = Attending.objects.get(payment_id=pk)
+    payment = Payment.objects.get(id=pk)
+    payment.status = False
+    attending.status = False
+    attending.save()
+    payment.save()
+    messages.success(request, 'Payment Conrimed Succesfully')
     return HttpResponseRedirect(reverse_lazy('payments'))
 
 
@@ -107,11 +135,11 @@ class PaymentListView(ListView):
         return {**context}
 
 
-def PaymentConfirmView(request, pk):
-    if request.method == 'POST':
-        payment = Payment.objects.get(id=pk)
+# def PaymentConfirmView(request, pk):
+#     if request.method == 'POST':
+#         payment = Payment.objects.get(id=pk)
 
-        payment.status = True
+#         payment.status = True
 
 
 class CourseCreateView(CreateView):
@@ -159,37 +187,32 @@ class CourseListView(ListView):
 def CourseDetail(request, pk):
     course = Course.objects.get(id=pk)
     user = request.user
-    lesson = Lesson.objects.get()
+    lessons = Lesson.objects.filter(course_id=pk)
     context = {
         "title": "Course",
+        "course": course,
+        "lessons": lessons
     }
-    if request.method == "POST":
 
-        attending = Attending(
-            course=course, student=user.student, date=timezone.now())
-        attending.full_clean()
-        attending.save()
-        messages.success(request, message="Renter Deleted Sucessfully")
-        return redirect("home")
     return render(request, 'main/course-details.html', context)
 
 
-class CourseDetailView(DetailView):
-    model: Course
-    template_name = "main/course-details.html"
+# class CourseDetailView(DetailView):
+#     model: Course
+#     template_name = "main/course-details.html"
 
-    def get(self, *args, **kwargs):
-        self.filter = kwargs.get("filter", None)
-        return super().get(self.request, *args, **kwargs)
+#     def get(self, *args, **kwargs):
+#         self.filter = kwargs.get("filter", None)
+#         return super().get(self.request, *args, **kwargs)
 
-    def get_queryset(self):
-        return Course.objects.all()
+#     def get_queryset(self):
+#         return Course.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Course"
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = "Course"
 
-        return {**context}
+#         return {**context}
 
 
 class CourseListViewAdmin(ListView):
