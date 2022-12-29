@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class Course(models.Model):
     category = models.ForeignKey(
-        "courses.Category", verbose_name=_("Course Category"), on_delete=models.CASCADE, blank=True, null=True)
+        "courses.Category", verbose_name=_("Course Category"), on_delete=models.CASCADE)
     title = models.CharField(_("Name"), max_length=100)
     description = models.TextField(_("Description"))
     duration = models.DurationField(_("Course Duration"))
@@ -17,6 +17,11 @@ class Course(models.Model):
     cover_image = models.ImageField(
         _("Cover Image"), null=True, upload_to="image/", blank=True)
     feature = models.BooleanField(_("Courese type"))
+    trainer = models.ForeignKey(
+        settings.AUTH_USER,
+        verbose_name=_("User"),
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return self.title
@@ -65,3 +70,20 @@ class Payment(models.Model):
     course_order_id = models.ForeignKey(
         "courses.Course", verbose_name=_("Course"), on_delete=models.CASCADE)
     status = models.BooleanField(_("Status"), default=False)
+
+
+class TrainerCourse(models.Model):
+    trainer = models.ForeignKey(
+        settings.AUTH_USER,
+        verbose_name=_("User"),
+        on_delete=models.CASCADE
+    )
+    course = models.ForeignKey(
+        "courses.Course", verbose_name="Course", on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(blank=True, null=True)

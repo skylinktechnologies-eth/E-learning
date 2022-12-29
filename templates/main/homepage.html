@@ -29,34 +29,48 @@
           <img src="img/about.jpg" class="img-fluid" alt="" />
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
-          <h3>
-            Voluptatem dignissimos provident quasi corporis voluptates sit
-            assumenda.
-          </h3>
+          <h3>How do you learn in BEDR E-Learning</h3>
+          {% comment %}
           <p class="fst-italic">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
+          {% endcomment %}
           <ul>
             <li>
-              <i class="bi bi-check-circle"></i> Ullamco laboris nisi ut aliquip
-              ex ea commodo consequat.
+              <i class="bi bi-check-circle"></i> Attend to courses using the
+              videos uploaded three times a week
             </li>
             <li>
-              <i class="bi bi-check-circle"></i> Duis aute irure dolor in
-              reprehenderit in voluptate velit.
+              <i class="bi bi-check-circle"></i>Attend a prescheduled online
+              class via zoom
             </li>
             <li>
-              <i class="bi bi-check-circle"></i> Ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-              voluptate trideta storacalaperda mastiro dolore eu fugiat nulla
-              pariatur.
+              <i class="bi bi-check-circle"></i>Access reference books that are
+              related to the course in PDF formats
+            </li>
+            <li>
+              <i class="bi bi-check-circle"></i>Send your questions via Ask BEDR
+            </li>
+            <li>
+              <i class="bi bi-check-circle"></i>Discuss with other students
+              through chat room
+            </li>
+            <li>
+              <i class="bi bi-check-circle"></i>Attend an online exam at the end
+              of the course and get your result online
+            </li>
+            <li>
+              <i class="bi bi-check-circle"></i>Get your certification once you
+              successfully complete the training
             </li>
           </ul>
+          {% comment %}
           <p>
             Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
             irure dolor in reprehenderit in voluptate
           </p>
+          {% endcomment %}
         </div>
       </div>
     </div>
@@ -70,7 +84,7 @@
         <div class="col-lg-3 col-6 text-center">
           <span
             data-purecounter-start="0"
-            data-purecounter-end="1232"
+            data-purecounter-end="{{studentCount}}"
             data-purecounter-duration="1"
             class="purecounter"
           ></span>
@@ -80,7 +94,7 @@
         <div class="col-lg-3 col-6 text-center">
           <span
             data-purecounter-start="0"
-            data-purecounter-end="64"
+            data-purecounter-end="{{ courseCount }}"
             data-purecounter-duration="1"
             class="purecounter"
           ></span>
@@ -112,6 +126,7 @@
   <!-- End Counts Section -->
 
   <!-- ======= Why Us Section ======= -->
+  {% comment %}
   <section id="why-us" class="why-us">
     <div class="container" data-aos="fade-up">
       <div class="row">
@@ -176,18 +191,21 @@
       </div>
     </div>
   </section>
+  {% endcomment %}
   <!-- End Why Us Section -->
 
   <!-- ======= Features Section ======= -->
   <section id="features" class="features">
     <div class="container" data-aos="fade-up">
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
-        <div class="col-lg-3 col-md-4">
+        {% for cat in category%}
+        <div class="col-lg-3 col-md-4 mt-4">
           <div class="icon-box">
-            <i class="ri-store-line" style="color: #ffbb2c"></i>
-            <h3><a href="">Lorem Ipsum</a></h3>
+            <i class="ri-file-list-3-line" style="color: #11dbcf"></i>
+            <h3><a href="">{{ cat.name }}</a></h3>
           </div>
         </div>
+        {% endfor %} {% comment %}
         <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
           <div class="icon-box">
             <i class="ri-bar-chart-box-line" style="color: #5578ff"></i>
@@ -254,6 +272,7 @@
             <h3><a href="">Flavor Nivelanda</a></h3>
           </div>
         </div>
+        {% endcomment %}
       </div>
     </div>
   </section>
@@ -269,9 +288,9 @@
 
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
         {% for course in courses %}
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
           <div class="course-item">
-            <img src="img/course-1.jpg" class="img-fluid" alt="..." />
+            <img src="{{course.cover_image.url}}" class="img-fluid" alt="..." />
             <div class="course-content">
               <div
                 class="d-flex justify-content-between align-items-center mb-3"
@@ -291,12 +310,10 @@
                     class="img-fluid"
                     alt=""
                   />
-                  <span>Antonio</span>
+                  <span>{{course.trainer.get_full_name}}</span>
                 </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-user"></i>&nbsp;50 &nbsp;&nbsp;
-                  <i class="bx bx-heart"></i>&nbsp;65
-                </div>
+
+                <div class="trainer-rank d-flex align-items-center"></div>
               </div>
             </div>
           </div>

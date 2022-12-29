@@ -24,6 +24,7 @@ def dashboard(request):
     student = Student.objects.all().count()
 
     payment = Payment.objects.all()
+
     total = 0
     unconfirmed = 0
     for i in payment:
@@ -39,8 +40,14 @@ def dashboard(request):
 
 
 def homePage(request):
+    category = Category.objects.all()
     courses = Course.objects.all()
-    context = {"open": "home", "courses": courses}
+    students = Student.objects.all()
+    trainer = User.objects.filter()
+    courseCount = courses.count()
+    studentCount = students.count()
+    context = {"open": "home", "courses": courses,
+               "studentCount": studentCount, "courseCount": courseCount, "category": category}
     return render(request, 'main/homepage.html', context)
 
 
@@ -152,14 +159,18 @@ class CourseCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tab_name"] = "Register"
-        context["title"] = "Room"
+        context["title"] = "Course"
         context["card_header"] = "Register Course"
-        context["open"] = "room"
+        context["open"] = "course"
         return {**context}
 
     def form_valid(self, form):
-        print("done")
+        form.instance.trainer = self.request.user
         messages.success(self.request, 'Course Registerd Successfully')
+        course = form.save()
+        trainer = TrainerCourse(course=course,
+                                trainer=self.request.user)
+        trainer.save()
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -183,7 +194,6 @@ class CourseListView(ListView):
         return {**context}
 
 
-@login_required
 def CourseDetail(request, pk):
     course = Course.objects.get(id=pk)
     user = request.user
@@ -436,5 +446,22 @@ class AttendingListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Attending"
         context["open"] = "attending"
+
+        return {**context}
+
+
+class trainerCreateView(CreateView):
+    model = User
+    template_name = "admin-side/register.html"
+    form_class = UserRegistrationForm
+
+    success_url = reverse_lazy("dashboard")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "User"
+        context["open"] = "user"
+        context["card_header"] = "Register User"
+        context['obj_model'] = "user"
 
         return {**context}

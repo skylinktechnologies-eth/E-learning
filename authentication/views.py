@@ -166,7 +166,7 @@ class StudentupdateView(UpdateView):
         return obj
 
 
-class UserCreateView(CreateView):
+class StudentCreateView(CreateView):
     model = User
     template_name = "main/register.html"
     form_class = UserRegistrationForm

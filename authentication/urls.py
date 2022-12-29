@@ -11,6 +11,6 @@ urlpatterns = [
          views.forgot_password, name='forgot-password'),
     path('change-password/', views.PasswordChangeView.as_view(),
          name='change-password'),
-    path("register-user/", views.UserCreateView.as_view(), name="register-user"),
+    path("register-user/", views.StudentCreateView.as_view(), name="register-user"),
 
 ]

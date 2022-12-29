@@ -15,7 +15,7 @@ class RegisterCourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'duration',
+        fields = ['category', 'title', 'description', 'duration',
                   'amount', 'cover_image', 'feature']
 
 
@@ -98,3 +98,18 @@ class RegisterCategoryForm(forms.ModelForm):
 #             user_student.save()
 
 #         return user
+class UserRegistrationForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name",
+                  "email", "password1", "password2")
+        field_classes = {"username": UsernameField}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self._meta.model.USERNAME_FIELD in self.fields:
+            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs['autofocus'] = True
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
