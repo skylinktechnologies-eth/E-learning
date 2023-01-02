@@ -84,6 +84,7 @@ class TrainerCourse(models.Model):
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=100)
-    start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField(blank=True, null=True)
+    title = models.CharField(_("Title"), max_length=100)
+    description = models.CharField(_("Description"), max_length=100)
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(blank=True, null=True)

@@ -104,7 +104,7 @@
         <div class="col-lg-3 col-6 text-center">
           <span
             data-purecounter-start="0"
-            data-purecounter-end="42"
+            data-purecounter-end="{{ eventCount }}"
             data-purecounter-duration="1"
             class="purecounter"
           ></span>
@@ -114,7 +114,7 @@
         <div class="col-lg-3 col-6 text-center">
           <span
             data-purecounter-start="0"
-            data-purecounter-end="15"
+            data-purecounter-end="{{ trainerCount }}"
             data-purecounter-duration="1"
             class="purecounter"
           ></span>
@@ -288,9 +288,11 @@
 
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
         {% for course in courses %}
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
           <div class="course-item">
+            {% if course.cover_image %}
             <img src="{{course.cover_image.url}}" class="img-fluid" alt="..." />
+            {%endif%}
             <div class="course-content">
               <div
                 class="d-flex justify-content-between align-items-center mb-3"
@@ -300,16 +302,11 @@
               </div>
 
               <h3><a href="course-details.html">{{ course.title }}</a></h3>
-              <p>{{ course.description }}.</p>
+              <p>{{ course.description|slice:"1:100" }}.</p>
               <div
                 class="trainer d-flex justify-content-between align-items-center"
               >
                 <div class="trainer-profile d-flex align-items-center">
-                  <img
-                    src="img/trainers/trainer-1.jpg"
-                    class="img-fluid"
-                    alt=""
-                  />
                   <span>{{course.trainer.get_full_name}}</span>
                 </div>
 
@@ -317,8 +314,8 @@
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
+        {% endfor %}
         <!-- End Course Item-->
 
         {% comment %}
@@ -406,6 +403,7 @@
   <!-- End Popular Courses Section -->
 
   <!-- ======= Trainers Section ======= -->
+  {% comment %}
   <section id="trainers" class="trainers">
     <div class="container" data-aos="fade-up">
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
@@ -471,6 +469,7 @@
       </div>
     </div>
   </section>
+  {% endcomment %}
   <!-- End Trainers Section -->
 </main>
 <!-- End #main -->

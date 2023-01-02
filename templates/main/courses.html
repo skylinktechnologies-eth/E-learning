@@ -1,4 +1,29 @@
 {% extends 'main/index.html' %} {% block main_page %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Button 07</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+      rel="stylesheet"
+    />
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'button/css/ionicons.min.css'%}" />
+    <link rel="stylesheet" href="{% static 'button/css/style.css'%}" />
+  </head>
+  <body>
+    <script src="{% static 'button/js/jquery.min.js'%}"></script>
+    <script src="{% static 'button/js/popper.js'%}"></script>
+    <script src="{% static 'button/js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'button/js/main.js'%}"></script>
+  </body>
+</html>
 <main id="main" data-aos="fade-in">
   <!-- ======= Breadcrumbs ======= -->
   <div class="breadcrumbs">
@@ -16,9 +41,37 @@
   <!-- ======= Courses Section ======= -->
   <section id="courses" class="courses">
     <div class="container" data-aos="fade-up">
+      <div class="row mb-5">
+        <div class="col-md-12 mb-3">
+          <form method="GET">
+            <div class="row">
+              <div class="col-md-3">
+                <button
+                  name=""
+                  type="button"
+                  class="btn mb-2 mb-md-1 btn-secondary btn-block"
+                >
+                  All
+                </button>
+              </div>
+              {%for cat in category %}
+              <div class="col-md-3">
+                <button
+                  type="submit"
+                  class="btn mb-2 mb-md-1 btn-secondary btn-block"
+                  value="{{ cat }}"
+                >
+                  {{ cat.name }}
+                </button>
+              </div>
+              {% endfor %}
+            </div>
+          </form>
+        </div>
+      </div>
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
-        {% if object_list.count > 0 %} {% for data in object_list %}
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+        {% if object_list.count > 0 %} {% for data in filter.qs %}
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-1">
           <div class="course-item">
             {% if data.cover_image %}
             <img src="{{ data.cover_image.url }}" class="img-fluid" alt="..." />
@@ -27,27 +80,23 @@
               <div
                 class="d-flex justify-content-between align-items-center mb-3"
               >
-                <h4>{{data.name}}</h4>
-                <p class="price">{{data.amount}}$</p>
+                <h4>{{data.category}}</h4>
+                <p class="price">{{data.amount}} Birr</p>
               </div>
 
               <h3>
-                <a href="{% url 'detail-course' data.id %}">Website Design</a>
+                <a href="{% url 'detail-course' data.id %}">{{data.title}}</a>
               </h3>
-              <p>{{data.description}}</p>
+              <p>{{data.description|slice:"1:100"}}</p>
               <div
                 class="trainer d-flex justify-content-between align-items-center"
               >
                 {% if data.cover_image %}
                 <div class="trainer-profile d-flex align-items-center">
-                  <img src="" class="img-fluid" alt="" />
-                  <span>Antonio</span>
+                  <span>{{ data.trainer.get_full_name }}</span>
                 </div>
                 {% endif %}
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-user"></i>&nbsp;50 &nbsp;&nbsp;
-                  <i class="bx bx-heart"></i>&nbsp;65
-                </div>
+                <div class="trainer-rank d-flex align-items-center"></div>
               </div>
             </div>
           </div>

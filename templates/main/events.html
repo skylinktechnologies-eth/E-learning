@@ -17,6 +17,7 @@
   <section id="events" class="events">
     <div class="container" data-aos="fade-up">
       <div class="row">
+        {% for data in datas %}
         <div class="col-md-6 d-flex align-items-stretch">
           <div class="card">
             <div class="card-img">
@@ -24,10 +25,10 @@
             </div>
             <div class="card-body">
               <h5 class="card-title">
-                <a href="">Introduction to webdesign</a>
+                <a href="">{{data.name}}</a>
               </h5>
               <p class="fst-italic text-center">
-                Sunday, September 26th at 7:00 pm
+                {{ data.start_date }} Till {{data.end_date}}
               </p>
               <p class="card-text">
                 Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod
@@ -38,6 +39,7 @@
             </div>
           </div>
         </div>
+        {%endfor%}
         <div class="col-md-6 d-flex align-items-stretch">
           <div class="card">
             <div class="card-img">

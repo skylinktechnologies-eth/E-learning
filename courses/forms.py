@@ -81,23 +81,6 @@ class RegisterCategoryForm(forms.ModelForm):
         fields = ['name', 'image']
 
 
-# class RegisterAttendingForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs) -> None:
-#         super(RegisterAttendingForm, self).__init__(*args, **kwargs)
-#         for field_name, field in self.fields.items():
-#             field.widget.attrs['class'] = 'form-control'
-
-#     def save(self, commit=True):
-#         user = super().save(commit=False)
-#         user.set_password(self.cleaned_data["password1"])
-#         if commit:
-#             user.save()
-
-#             user.save()
-#             user_student = Attending()
-#             user_student.save()
-
-#         return user
 class UserRegistrationForm(UserCreationForm):
 
     class Meta:
@@ -113,3 +96,20 @@ class UserRegistrationForm(UserCreationForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class eventRegistrationForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs) -> None:
+        super(eventRegistrationForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'start_date', 'end_date']
+        widget = {'start_date': DateInput(), 'end_date': DateInput()}

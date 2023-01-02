@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from authentication.models import Student
-# from ..authentication.models import Student
+from .filters import courseFilter
+
 
 # Create your views here.
 
@@ -43,11 +44,13 @@ def homePage(request):
     category = Category.objects.all()
     courses = Course.objects.all()
     students = Student.objects.all()
-    trainer = User.objects.filter()
+    trainerCount = User.objects.filter(groups__name="trainer").count()
     courseCount = courses.count()
     studentCount = students.count()
+    event = Event.objects.all()
+    eventCount = event.count()
     context = {"open": "home", "courses": courses,
-               "studentCount": studentCount, "courseCount": courseCount, "category": category}
+               "studentCount": studentCount, "courseCount": courseCount, "category": category, "trainerCount": trainerCount, "eventCount": eventCount}
     return render(request, 'main/homepage.html', context)
 
 
@@ -62,7 +65,8 @@ def trainer(request):
 
 
 def events(request):
-    context = {"open": "event"}
+    event = Event.objects.all()
+    context = {"open": "event", 'datas': event}
     return render(request, 'main/events.html', context)
 
 
@@ -178,6 +182,19 @@ class CourseCreateView(CreateView):
         return super().form_invalid(form)
 
 
+# def CourseListView(request):
+#     object_list = Course.objects.all()
+#     category = Category.objects.all()
+
+#     context = {}
+#     context['category'] = category
+#     context['object_list'] = object_list
+#     context['open'] = "course"
+#     context['title'] = "Courses"
+
+#     return render(request, 'main/courses.html', context)
+
+
 class CourseListView(ListView):
     model = Course
     template_name = "main/courses.html"
@@ -190,7 +207,9 @@ class CourseListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Courses"
         context["open"] = "course"
-
+        context["filter"] = courseFilter(
+            self.request.GET, queryset=self.get_queryset())
+        context['category'] = Category.objects.all()
         return {**context}
 
 
@@ -463,5 +482,35 @@ class trainerCreateView(CreateView):
         context["open"] = "user"
         context["card_header"] = "Register User"
         context['obj_model'] = "user"
+
+        return {**context}
+
+
+class eventCreateView(CreateView):
+    form_class = eventRegistrationForm
+    model = Event
+    success_url = reverse_lazy('event-list')
+    template_name = "admin-side/register.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Event"
+        context["open"] = "event"
+        context["card_header"] = "Register Event"
+        context['obj_model'] = "event"
+
+        return {**context}
+
+
+class eventListView(ListView):
+    model = Event
+    template_name = "admin-side/event-list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Event"
+        context["open"] = "event"
+        context["card_header"] = " Events"
+        context['obj_model'] = "event"
 
         return {**context}
