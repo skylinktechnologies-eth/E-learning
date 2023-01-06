@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 from .models import *
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 
 class RegisterCourseForm(forms.ModelForm):
@@ -96,6 +97,46 @@ class UserRegistrationForm(UserCreationForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+            user.groups.add()
+            user.save()
+
+        return user
+
+
+class TrainerRegistrationForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name",
+                  "email", "password1", "password2")
+        field_classes = {"username": UsernameField}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self._meta.model.USERNAME_FIELD in self.fields:
+            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs['autofocus'] = True
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+            group = Group.objects.get(name='trainer')
+            group.user_set.add(user)
+            # user.groups.add('trainer')
+            group.save()
+            user.save()
+
+        return user
 
 
 class DateInput(forms.DateInput):

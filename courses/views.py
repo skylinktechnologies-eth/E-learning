@@ -469,10 +469,27 @@ class AttendingListView(ListView):
         return {**context}
 
 
+class TrainerListView(ListView):
+    model = User
+    template_name = "admin-side/trainer-list.html"
+
+    def get_queryset(self):
+        users = User.objects.filter(groups__name='trainer')
+
+        return users
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Trainer"
+        context["open"] = "trainer"
+
+        return {**context}
+
+
 class trainerCreateView(CreateView):
     model = User
     template_name = "admin-side/register.html"
-    form_class = UserRegistrationForm
+    form_class = TrainerRegistrationForm
 
     success_url = reverse_lazy("dashboard")
 

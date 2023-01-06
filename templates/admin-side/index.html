@@ -109,6 +109,11 @@
               ><i class="fa fa-th me-2"></i>Lessons</a
             >
             <a
+              href="{% url 'trainers'%}"
+              class="nav-item nav-link {% if open == 'trainer' %}active{% endif %}"
+              ><i class="fa fa-th me-2"></i>Trainers</a
+            >
+            <a
               href="{%url 'categorys'%}"
               class="nav-item nav-link {% if open == 'category' %}active{% endif %}"
               ><i class="fa fa-keyboard me-2"></i>Category</a

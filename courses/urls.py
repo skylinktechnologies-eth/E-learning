@@ -44,5 +44,6 @@ urlpatterns = [
          name="register-trainer"),
     path("create-event", views.eventCreateView.as_view(), name="register-event"),
     path("admin-event", views.eventListView.as_view(), name="events"),
+    path("admin-trainer", views.TrainerListView.as_view(), name="trainers"),
 
 ]
