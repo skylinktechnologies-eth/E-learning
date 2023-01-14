@@ -20,23 +20,27 @@ def permissions(request):
     }
 
 
+@login_required
 def dashboard(request):
-    course = Course.objects.all().count()
-    student = Student.objects.all().count()
+    if request.user.has_perm(perm="course.view_course"):
+        course = Course.objects.all().count()
+        student = Student.objects.all().count()
 
-    payment = Payment.objects.all()
+        payment = Payment.objects.all()
 
-    total = 0
-    unconfirmed = 0
-    for i in payment:
-        if i.status:
-            amount = i.course_order_id.amount
-            total = total + amount
-        else:
-            amount = i.course_order_id.amount
-            unconfirmed = unconfirmed + amount
-    context = {"course": course, "student": student,
-               "open": "dashboard", "total": total, "unpaid": unconfirmed}
+        total = 0
+        unconfirmed = 0
+        for i in payment:
+            if i.status:
+                amount = i.course_order_id.amount
+                total = total + amount
+            else:
+                amount = i.course_order_id.amount
+                unconfirmed = unconfirmed + amount
+        context = {"course": course, "student": student,
+                   "open": "dashboard", "total": total, "unpaid": unconfirmed}
+    else:
+        return redirect("/")
     return render(request, 'admin-side/dashboard.html', context)
 
 
@@ -75,29 +79,36 @@ def contact(request):
     return render(request, 'main/contact.html', context)
 
 
+@login_required
 def PaymentCreateView(request):
-    if request.method == "POST":
-        form = RegisterPaymentForm(request.POST)
-        user = request.user
-        course_id = request.POST.get("course_order_id")
-        if form.is_valid():
-            course = Course.objects.get(id=course_id)
-            payment = form.save(commit=False)
-            payment.student = user.student
-            payment.save()
+    if Student.objects.filter(user_id=request.user.id):
+        if request.method == "POST":
+            form = RegisterPaymentForm(request.POST)
+            user = request.user
+            course_id = request.POST.get("course_order_id")
+            if form.is_valid():
+                course = Course.objects.get(id=course_id)
+                payment = form.save(commit=False)
+                payment.student = user.student
+                payment.save()
 
-            attending = Attending(
-                payment=payment)
-            attending.full_clean()
-            attending.save()
-            messages.success(request, message="payment registerd Sucessfully")
-            return redirect("home")
+                attending = Attending(
+                    payment=payment)
+                attending.full_clean()
+                attending.save()
+                messages.success(
+                    request, message="payment registerd Sucessfully")
+                return redirect("home")
+        else:
+            form = RegisterPaymentForm()
+        context = {"title": "payment", "form": form}
     else:
-        form = RegisterPaymentForm()
-    context = {"title": "payment", "form": form}
+        messages.error(request, 'You are not a registerd student')
+        return redirect('/')
     return render(request, 'main/register.html', context)
 
 
+@login_required
 def PaymentConfirmView(request, pk):
     attending = Attending.objects.get(payment_id=pk)
     payment = Payment.objects.get(id=pk)
@@ -122,7 +133,7 @@ def PaymentConfirmView(request, pk):
 
 #         return {**context}
 
-
+@login_required
 def paymentRejectView(request, pk):
     attending = Attending.objects.get(payment_id=pk)
     payment = Payment.objects.get(id=pk)
@@ -130,11 +141,11 @@ def paymentRejectView(request, pk):
     attending.status = False
     attending.save()
     payment.save()
-    messages.success(request, 'Payment Conrimed Succesfully')
+    messages.success(request, 'Payment Rejected Succesfully')
     return HttpResponseRedirect(reverse_lazy('payments'))
 
 
-class PaymentListView(ListView):
+class PaymentListView(LoginRequiredMixin, ListView):
     model = Payment
     template_name = "admin-side/payment-list.html"
 
@@ -153,7 +164,7 @@ class PaymentListView(ListView):
 #         payment.status = True
 
 
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
     form_class = RegisterCourseForm
     template_name = "admin-side/register-course.html"
@@ -244,7 +255,7 @@ def CourseDetail(request, pk):
 #         return {**context}
 
 
-class CourseListViewAdmin(ListView):
+class CourseListViewAdmin(LoginRequiredMixin, ListView):
     model = Course
     template_name = "admin-side/course-list.html"
 
@@ -260,7 +271,7 @@ class CourseListViewAdmin(ListView):
         return {**context}
 
 
-class LessonCreateview(CreateView):
+class LessonCreateview(LoginRequiredMixin, CreateView):
     form_class = RegisterLessonForm
     success_url = reverse_lazy("lessons")
     template_name = "admin-side/register-lesson.html"
@@ -283,7 +294,7 @@ class LessonCreateview(CreateView):
         return super().form_invalid(form)
 
 
-class LessonListView(ListView):
+class LessonListView(LoginRequiredMixin, ListView):
     model = Lesson
     template_name = "admin-side/lesson-list.html"
 
@@ -299,7 +310,7 @@ class LessonListView(ListView):
         return {**context}
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     form_class = RegisterCategoryForm
     success_url = reverse_lazy('categorys')
@@ -313,7 +324,7 @@ class CategoryCreateView(CreateView):
         return {**context}
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     template_name = 'admin-side/category-list.html'
 
@@ -325,7 +336,7 @@ class CategoryListView(ListView):
         return {**context}
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Category
     template_name = "admin-side/register.html"
     success_url = reverse_lazy('categorys')
@@ -339,7 +350,7 @@ class CategoryUpdateView(UpdateView):
         return {**context}
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy("categorys")
 
@@ -364,7 +375,7 @@ class CategoryDeleteView(DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(LoginRequiredMixin, DeleteView):
     model = Course
     success_url = reverse_lazy("courses")
 
@@ -389,7 +400,7 @@ class CourseDeleteView(DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(LoginRequiredMixin, UpdateView):
     model = Course
     form_class = RegisterCourseForm
     success_url = reverse_lazy('courses')
@@ -413,7 +424,7 @@ class CourseUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class LessonUpdateView(UpdateView):
+class LessonUpdateView(LoginRequiredMixin, UpdateView):
     model = Lesson
     form_class = RegisterLessonForm
     success_url = reverse_lazy('lessons')
@@ -437,7 +448,7 @@ class LessonUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class LessonDeleteView(DeleteView):
+class LessonDeleteView(LoginRequiredMixin, DeleteView):
     model = Lesson
     success_url = reverse_lazy("lessons")
 
@@ -457,7 +468,7 @@ class LessonDeleteView(DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class AttendingListView(ListView):
+class AttendingListView(LoginRequiredMixin, ListView):
     model = Attending
     template_name = "admin-side/attending-list.html"
 
@@ -469,7 +480,7 @@ class AttendingListView(ListView):
         return {**context}
 
 
-class TrainerListView(ListView):
+class TrainerListView(LoginRequiredMixin, ListView):
     model = User
     template_name = "admin-side/trainer-list.html"
 
@@ -486,7 +497,7 @@ class TrainerListView(ListView):
         return {**context}
 
 
-class trainerCreateView(CreateView):
+class trainerCreateView(LoginRequiredMixin, CreateView):
     model = User
     template_name = "admin-side/register.html"
     form_class = TrainerRegistrationForm
@@ -503,10 +514,10 @@ class trainerCreateView(CreateView):
         return {**context}
 
 
-class eventCreateView(CreateView):
+class eventCreateView(LoginRequiredMixin, CreateView):
     form_class = eventRegistrationForm
     model = Event
-    success_url = reverse_lazy('event-list')
+    success_url = reverse_lazy('events')
     template_name = "admin-side/register.html"
 
     def get_context_data(self, **kwargs):
@@ -519,7 +530,7 @@ class eventCreateView(CreateView):
         return {**context}
 
 
-class eventListView(ListView):
+class eventListView(LoginRequiredMixin, ListView):
     model = Event
     template_name = "admin-side/event-list.html"
 
