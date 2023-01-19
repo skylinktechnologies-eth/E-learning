@@ -23,8 +23,9 @@
             <div class="card-img"></div>
             <div class="card-body">
               <h5 class="card-title">
-                <a href="">{{data.name}}</a>
+                <a href="">{{data.title}}</a>
               </h5>
+              <p class="fst-italic text-center">{{ data.description }}</p>
               <p class="fst-italic text-center">
                 {{ data.start_date }} Till {{data.end_date}}
               </p>
@@ -32,7 +33,7 @@
             </div>
           </div>
         </div>
-        {%endfor%}
+        {%endfor%} {% comment %}
         <div class="col-md-6 d-flex align-items-stretch">
           <div class="card">
             <div class="card-img">
@@ -52,6 +53,7 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
       </div>
     </div>
   </section>

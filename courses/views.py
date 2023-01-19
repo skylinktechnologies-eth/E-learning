@@ -193,45 +193,52 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-# def CourseListView(request):
-#     object_list = Course.objects.all()
-#     category = Category.objects.all()
+def CourseListView(request):
+    object_list = Course.objects.all()
+    category = Category.objects.all()
 
-#     context = {}
-#     context['category'] = category
-#     context['object_list'] = object_list
-#     context['open'] = "course"
-#     context['title'] = "Courses"
+    myFilter = courseFilter(request.GET, queryset=object_list)
+    courses = myFilter.qs
+    context = {}
+    context['category'] = category
+    context['object_list'] = object_list
+    context['open'] = "course"
+    context['title'] = "Courses"
+    context['filter'] = courses
+    context['myFilter'] = myFilter
 
-#     return render(request, 'main/courses.html', context)
+    return render(request, 'main/courses.html', context)
 
 
-class CourseListView(ListView):
-    model = Course
-    template_name = "main/courses.html"
+# class CourseListView(ListView):
+#     model = Course
+#     template_name = "main/courses.html"
 
-    def get(self, *args, **kwargs):
-        self.filter = kwargs.get("filter", None)
-        return super().get(self.request, *args, **kwargs)
+#     def get(self, *args, **kwargs):
+#         self.filter = kwargs.get("filter", None)
+#         return super().get(self.request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Courses"
-        context["open"] = "course"
-        context["filter"] = courseFilter(
-            self.request.GET, queryset=self.get_queryset())
-        context['category'] = Category.objects.all()
-        return {**context}
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = "Courses"
+#         context["open"] = "course"
+#         context["filter"] = courseFilter(
+#             self.request.GET, queryset=self.get_queryset())
+#         context['category'] = Category.objects.all()
+#         return {**context}
 
 
 def CourseDetail(request, pk):
     course = Course.objects.get(id=pk)
     user = request.user
     lessons = Lesson.objects.filter(course_id=pk)
+    student = get_object_or_404(Student, user_id=request.user.id)
+    applied = Payment.objects.filter(student_id=student, course_order_id_id=pk)
     context = {
         "title": "Course",
         "course": course,
-        "lessons": lessons
+        "lessons": lessons,
+        "applied": applied
     }
 
     return render(request, 'main/course-details.html', context)

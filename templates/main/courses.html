@@ -35,18 +35,18 @@
                 <button
                   type="submit"
                   class="btn mb-2 mb-md-1 btn-secondary btn-block"
-                  value="{{ cat }}"
+                  value=""
                 >
                   {{ cat.name }}
                 </button>
               </div>
-              {% endfor %}
+              {% endfor %} {% comment %} {{ myFilter.form }} {% endcomment %}
             </div>
           </form>
         </div>
       </div>
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
-        {% if object_list.count > 0 %} {% for data in filter.qs %}
+        {% if object_list.count > 0 %} {% for data in filter %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-1">
           <div class="course-item">
             {% if data.cover_image %}
