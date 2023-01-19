@@ -88,17 +88,23 @@ def PaymentCreateView(request):
             course_id = request.POST.get("course_order_id")
             if form.is_valid():
                 course = Course.objects.get(id=course_id)
-                payment = form.save(commit=False)
-                payment.student = user.student
-                payment.save()
+                exist = Payment.objects.filter(
+                    student_id=user.student, course_order_id_id=course.id)
+                if exist:
+                    messages.error(request, 'You are not a registerd student')
+                    return redirect('/')
+                else:
+                    payment = form.save(commit=False)
+                    payment.student = user.student
+                    payment.save()
 
-                attending = Attending(
-                    payment=payment)
-                attending.full_clean()
-                attending.save()
-                messages.success(
-                    request, message="payment registerd Sucessfully")
-                return redirect("home")
+                    attending = Attending(
+                        payment=payment)
+                    attending.full_clean()
+                    attending.save()
+                    messages.success(
+                        request, message="payment registerd Sucessfully")
+                    return redirect("home")
         else:
             form = RegisterPaymentForm()
         context = {"title": "payment", "form": form}
