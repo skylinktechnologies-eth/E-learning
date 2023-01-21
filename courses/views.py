@@ -239,7 +239,14 @@ def CourseDetail(request, pk):
     user = request.user
     lessons = Lesson.objects.filter(course_id=pk)
     student = get_object_or_404(Student, user_id=request.user.id)
-    applied = Payment.objects.filter(student_id=student, course_order_id_id=pk)
+    applied = Payment.objects.filter(
+        student_id=student, course_order_id_id=pk).exists()
+    apply = Payment.objects.filter(
+        student_id=student, course_order_id_id=pk)
+    attend = apply[0].status
+
+    # for i in range(100):
+    #     print(applied[0].status)
     context = {
         "title": "Course",
         "course": course,
