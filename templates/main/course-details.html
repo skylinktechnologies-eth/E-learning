@@ -97,7 +97,7 @@
                     parde sonata raqer a videna mareta paulona marka
                   </p> {% endcomment %}
                   {%if lesson.video%}
-                  <video width="320" height="240" controls>
+                  <video width="320" height="240" controls class="course-info d-flex justify-content-center align-items-center">
                      <source src="{{lesson.video.url}}"  type="video/mp4"></video>
                   {%endif%}
                   <p>
@@ -107,7 +107,8 @@
           class="course-info d-flex justify-content-center align-items-center"
           style="background-color: #5fcf80; cursor: pointer"
         >
-                   <a href="/media/file/{{ lesson.pdf }}">Download  </a>
+                  <h5>more detials in the Pdf</h5>
+                   <a href="/media/{{ lesson.pdf }}" target="_blank">Download  </a>
                 </div>        
                 </div>
                 <div class="col-lg-4 text-center order-1 order-lg-2">
