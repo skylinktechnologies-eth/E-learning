@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
+from chat.models import Room
 
 
 # Create your models here.
@@ -22,9 +23,17 @@ class Course(models.Model):
         verbose_name=_("User"),
         on_delete=models.CASCADE
     )
+    room = models.ForeignKey("chat.Room", verbose_name=_(
+        "Room"), on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+    def save(self):
+        room = None
+        room = Room()
+        room.name = self.title
+        room.save()
 
 
 class Lesson(models.Model):

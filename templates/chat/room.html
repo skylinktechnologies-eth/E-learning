@@ -1,0 +1,145 @@
+{% extends 'chat/index.html' %} {% block main_page%}
+<div class="chat">
+  <div class="chat-header clearfix">
+    <div class="row">
+      <div class="col-lg-6">
+        <a
+          href="javascript:void(0);"
+          data-toggle="modal"
+          data-target="#view_info"
+        >
+          <img
+            src="https://bootdey.com/img/Content/avatar/avatar2.png"
+            alt="avatar"
+          />
+        </a>
+        <div class="chat-about">
+          <h6 class="m-b-0">Aiden Chavez</h6>
+          <small>Last seen: 2 hours ago</small>
+        </div>
+      </div>
+      <div class="col-lg-6 hidden-sm text-right">
+        <a href="javascript:void(0);" class="btn btn-outline-secondary"
+          ><i class="fa fa-camera"></i
+        ></a>
+        <a href="javascript:void(0);" class="btn btn-outline-primary"
+          ><i class="fa fa-image"></i
+        ></a>
+        <a href="javascript:void(0);" class="btn btn-outline-info"
+          ><i class="fa fa-cogs"></i
+        ></a>
+        <a href="javascript:void(0);" class="btn btn-outline-warning"
+          ><i class="fa fa-question"></i
+        ></a>
+      </div>
+    </div>
+  </div>
+  <div class="chat-history">
+    <ul class="m-b-0">
+      <li class="clearfix">
+        <div class="message-data text-right">
+          <span class="message-data-time">10:10 AM, Today</span>
+          <img
+            src="https://bootdey.com/img/Content/avatar/avatar7.png"
+            alt="avatar"
+          />
+        </div>
+        <div class="message other-message float-right">
+          Hi Aiden, how are you? How is the project coming along?
+        </div>
+      </li>
+      <li class="clearfix">
+        <div class="message-data">
+          <span class="message-data-time">10:12 AM, Today</span>
+        </div>
+        <div class="message my-message">Are we meeting today?</div>
+      </li>
+      <li class="clearfix">
+        <div class="message-data">
+          <span class="message-data-time">10:15 AM, Today</span>
+        </div>
+        <div class="message my-message">
+          Project has been already finished and I have results to show you.
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="chat-message clearfix">
+    <div class="input-group mb-0">
+      <div class="input-group-prepend"></div>
+      <form id="post-form">
+        <input
+          type="hidden"
+          name="username"
+          id="username"
+          value="{{request.user}}"
+        />
+        <input
+          type="hidden"
+          name="room_id"
+          id="room_id"
+          value="{{room_detail.id}}"
+        />
+        <input
+          type="text"
+          name="message"
+          id="message"
+          class="form-control"
+          placeholder="Enter text here..."
+        />
+        <input type="submit" value="send" />
+      </form>
+    </div>
+  </div>
+</div>
+{%endblock main_page%} {% block scripts %} {% comment %}
+<script>
+  $(document).ready(function () {
+    setInterval(function () {
+      $.ajax({
+        type: "GET",
+        url: "/getMessages/{{room}}/",
+        success: function (response) {
+          console.log(response);
+          $("#display").empty();
+          for (var key in response.messages) {
+            var temp =
+              "<div class='container darker'><b>" +
+              response.messages[key].user +
+              "</b><p>" +
+              response.messages[key].value +
+              "</p><span class='time-left'>" +
+              response.messages[key].date +
+              "</span></div>";
+            $("#display").append(temp);
+          }
+        },
+        error: function (response) {
+          alert("An error occured");
+        },
+      });
+    }, 1000);
+  });
+</script>
+{% endcomment %}
+<script type="text/javascript">
+  $(document).on("submit", "#post-form", function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      type: "POST",
+      url: "/send",
+      data: {
+        username: $("#username").val(),
+        room_id: $("#room_id").val(),
+        message: $("#message").val(),
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+      },
+      success: function (data) {
+        alert(data);
+      },
+    });
+    document.getElementById("message").value = "";
+  });
+</script>
+{%endblock scripts%}
