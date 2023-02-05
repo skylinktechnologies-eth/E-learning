@@ -30,7 +30,6 @@ class Course(models.Model):
         return self.title
 
     def save(self):
-        room = None
         room = Room()
         room.name = self.title
         room.save()

@@ -103,13 +103,11 @@
                   <p>
                    {{lesson.description}}
                   </p>
-                  <div
-          class="course-info d-flex justify-content-center align-items-center"
-          style="background-color: #5fcf80; cursor: pointer"
-        >
-                  <h5>more detials in the Pdf</h5>
-                   <a href="/media/{{ lesson.pdf }}" target="_blank">Download  </a>
-                </div>        
+             
+                  {%if lesson.pdf %}
+                   <a href="{{ lesson.pdf.url }}" target="_blank">Rescources </a>
+                   {%endif%}
+                      
                 </div>
                 <div class="col-lg-4 text-center order-1 order-lg-2">
                   

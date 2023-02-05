@@ -79,6 +79,56 @@ def contact(request):
     return render(request, 'main/contact.html', context)
 
 
+class CourseCreateView(LoginRequiredMixin, CreateView):
+    model = Course
+    form_class = RegisterCourseForm
+    template_name = "admin-side/register-course.html"
+    context_object_name = 'form'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tab_name"] = "Register"
+        context["title"] = "Course"
+        context["card_header"] = "Register Course"
+        context["open"] = "course"
+        return {**context}
+
+    def form_valid(self, form):
+        form.instance.trainer = self.request.user
+
+        messages.success(self.request, 'Course Registerd Successfully')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
+
+# @login_required
+# def CourseCreateView(request):
+#     form = RegisterCourseForm()
+#     if request.method == "POST":
+#         form = RegisterCourseForm(request.POST)
+
+#         if form.is_valid():
+#             course = form.save(commit=False)
+#             course.trainer = request.user
+#             course.save()
+#             trainer = TrainerCourse(course=course,
+#                                     trainer=request.user)
+#             trainer.full_clean()
+#             trainer.save()
+#             messages.success(
+#                 request, message="payment registerd Sucessfully")
+#             return redirect("home")
+#     else:
+#         form = RegisterPaymentForm()
+#     context = {"title": "payment", "form": form}
+
+#     return render(request, "admin-side/register-course.html", context)
+
+
 @login_required
 def PaymentCreateView(request):
     if Student.objects.filter(user_id=request.user.id):
@@ -97,7 +147,6 @@ def PaymentCreateView(request):
                     payment = form.save(commit=False)
                     payment.student = user.student
                     payment.save()
-
                     attending = Attending(
                         payment=payment)
                     attending.full_clean()
@@ -168,35 +217,6 @@ class PaymentListView(LoginRequiredMixin, ListView):
 #         payment = Payment.objects.get(id=pk)
 
 #         payment.status = True
-
-
-class CourseCreateView(LoginRequiredMixin, CreateView):
-    model = Course
-    form_class = RegisterCourseForm
-    template_name = "admin-side/register-course.html"
-    context_object_name = 'form'
-    success_url = reverse_lazy('home')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tab_name"] = "Register"
-        context["title"] = "Course"
-        context["card_header"] = "Register Course"
-        context["open"] = "course"
-        return {**context}
-
-    def form_valid(self, form):
-        form.instance.trainer = self.request.user
-        messages.success(self.request, 'Course Registerd Successfully')
-        course = form.save()
-        trainer = TrainerCourse(course=course,
-                                trainer=self.request.user)
-        trainer.save()
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        return super().form_invalid(form)
 
 
 def CourseListView(request):
